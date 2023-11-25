@@ -1,20 +1,34 @@
 import { IonButton, IonCard, IonCardContent, IonContent, IonHeader, IonIcon, IonInput, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { logInOutline, personCircleOutline } from 'ionicons/icons'
 import fcc from '../assets/fcc_secondary_small.svg'
 import Intro from '../components/Intro';
+import { Preferences } from '@capacitor/preferences';
+
+const INTRO_KEY = 'intro-seen'
 
 const Login: React.FC = () => {
 
     const [introSeen, setIntroSeen] = useState(false)
 
+    useEffect(() => {
+        const checkStorage = async() => {
+            const seen = await Preferences.get({key : INTRO_KEY})
+            console.log('file is ', seen)
+            setIntroSeen(seen.value === 'true')
+        }
+
+        checkStorage()
+    }, [])
+
     const login = (event: any) => {
-        event.preventDefault()
+        event.preventDefault()  
         console.log('logged in')
     }
 
-    const finishIntro = ()=>{
+    const finishIntro = async ()=>{
         console.log('FIN')
+        setIntroSeen(true)
     }
     return (
         <>
